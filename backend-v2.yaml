@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customers-v2
+  name: backend-v2
   labels:
-    app: customers
+    app: backend
     version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: customers
+      app: backend
       version: v2
   template:
     metadata:
       labels:
-        app: customers
+        app: backend
         version: v2
     spec:
       containers:

@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-frontend
+  name: frontend
   labels:
-    app: web-frontend
+    app: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web-frontend
+      app: frontend
   template:
     metadata:
       labels:
-        app: web-frontend
+        app: frontend
         version: v1
     spec:
       containers:
@@ -23,17 +23,17 @@ spec:
             - containerPort: 8080
           env:
             - name: CUSTOMER_SERVICE_URL
-              value: 'http://customers.default.svc.cluster.local'
+              value: 'http://backend.default.svc.cluster.local'
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: web-frontend
+  name: frontend
   labels:
-    app: web-frontend
+    app: frontend
 spec:
   selector:
-    app: web-frontend
+    app: frontend
   ports:
     - port: 80
       name: http

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customers-v1
+  name: backend-v1
   labels:
-    app: customers
+    app: backend
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: customers
+      app: backend
       version: v1
   template:
     metadata:
       labels:
-        app: customers
+        app: backend
         version: v1
     spec:
       containers:
@@ -27,12 +27,12 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: customers
+  name: backend
   labels:
-    app: customers
+    app: backend
 spec:
   selector:
-    app: customers
+    app: backend
   ports:
     - port: 80
       name: http
