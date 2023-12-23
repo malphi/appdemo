@@ -1,0 +1,51 @@
+# 所有请求都需要来自 hello.io 域名（即在向代理发出请求时，我们将使用 Host: hello.io 标头）
+# 所有向路径 /api 发出的请求将返回字符串 hello - path
+# 所有向根路径（即 /）发出的请求将返回字符串 hello - prefix
+# 所有以 /hello 开头并在后面加上数字的请求（如 /hello/1，/hello/523）都应返回 hello - regex字符串
+# curl -H "Host: hello.io" localhost:9999
+# curl -H "Host: hello.io" localhost:9999/api
+# curl -H "Host: hello.io" localhost:9999/hello/123
+
+static_resources:
+  listeners:
+  - name: listener_0
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 9999
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: hello_service
+          http_filters:
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          route_config:
+            name: route
+            virtual_hosts:
+            - name: hello_vhost
+              domains: ["hello.io"]
+              routes:
+              - match:
+                  path: "/api"
+                direct_response:
+                  status: 200
+                  body:
+                    inline_string: "hello - path"
+              - match:
+                  safe_regex:
+                    google_re2: {}
+                    regex: ^/hello/\d+$
+                direct_response:
+                  status: 200
+                  body:
+                    inline_string: "hello - regex"
+              - match:
+                  prefix: "/"
+                direct_response:
+                  status: 200
+                  body:
+                    inline_string: "hello - prefix"
