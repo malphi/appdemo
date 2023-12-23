@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Sidecar
+metadata:
+  name: frontend
+spec:
+  workloadSelector:
+    labels:
+      app: frontend
+  egress:
+  - hosts:
+    - default/backend.default.svc.cluster.local
+
+# 查看可见性 istioctl proxy-config clusters podname

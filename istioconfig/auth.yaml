@@ -1,0 +1,17 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-sleep
+  namespace: default
+spec:
+  # selector:
+  #   matchLabels:
+  #       app: backend
+  action: DENY
+  rules:
+  - from:
+    - source:
+        namespaces: ["default"]
+      source:
+        principals: ["cluster.local/ns/default/sa/sleep"]
+    
